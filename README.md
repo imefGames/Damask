@@ -7,7 +7,7 @@ Here's a list of issues I wish to address now that Damask can run some rudimenta
 * There are many features programming languages have that need to be implemented here.
 * Functions declarations are not taken into account.
 * Operator precedence is not taken into account.
-* The ***ASTExecutor*** visitor only handle
+* The ***ASTExecutor*** visitor only handles S32 integers.
 * The Lexer and the AST Builder need to report errors.
 * There are many tokens the Lexer is not able to recongnise yet. 
 * The code to build the AST is dirty. I will have to go over it to clean it.

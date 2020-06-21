@@ -2,7 +2,7 @@
 
 
 class ExecutionContext;
-class Lexer;
+struct Lexer;
 
 namespace AST
 {

@@ -11,15 +11,12 @@ static const char* K_TEST_PROGRAM
 {
 "void main()\n"
 "{\n"
-"    s32 a = ReadS32();\n"
-"    if (a)\n"
+"    s32 a = 1;\n"
+"    while (a)\n"
 "    {\n"
-"        Print(0);\n"
+"        s32 a = ReadS32();\n"
 "    }\n"
-"    else\n"
-"    {\n"
-"        Print(1);\n"
-"    }\n"
+"    Print(a);\n"
 "}\n"
 };
 

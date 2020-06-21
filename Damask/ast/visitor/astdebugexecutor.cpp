@@ -3,6 +3,7 @@
 #include <ast/branchnode.h>
 #include <ast/functioncallnode.h>
 #include <ast/instructionsequencenode.h>
+#include <ast/loopnode.h>
 #include <ast/operatornode.h>
 #include <ast/rawvaluenode.h>
 #include <ast/variabledeclarationnode.h>
@@ -67,6 +68,27 @@ namespace AST
         }
     }
 
+    void ASTDebugExecutor::VisitNode(LoopNode& node)
+    {
+        m_ReturnValue = 0;
+        if (Node* condition = node.GetConditionExpression())
+        {
+            condition->Accept(*this);
+        }
+
+        while (m_ReturnValue)
+        {
+            if (Node* loopBody = node.GetLoopBody())
+            {
+                loopBody->Accept(*this);
+            }
+            if (Node* condition = node.GetConditionExpression())
+            {
+                condition->Accept(*this);
+            }
+        }
+    }
+
     void ASTDebugExecutor::VisitNode(OperatorNode& node)
     {
         int rhsValue{ 0 };
@@ -83,6 +105,8 @@ namespace AST
             rhs->Accept(*this);
             rhsValue = m_ReturnValue;
         }
+
+        //TODO: handle assign operator
 
         switch (node.GetOperatorType())
         {

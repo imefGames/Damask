@@ -3,6 +3,7 @@
 #include <ast/branchnode.h>
 #include <ast/functioncallnode.h>
 #include <ast/instructionsequencenode.h>
+#include <ast/loopnode.h>
 #include <ast/operatornode.h>
 #include <ast/rawvaluenode.h>
 #include <ast/variabledeclarationnode.h>
@@ -24,7 +25,7 @@ namespace AST
         DisplayText("Condition:");
         DisplayNode(node.GetConditionExpression());
         
-        DisplayText("if Body:");
+        DisplayText("If Body:");
         DisplayNode(node.GetIfBody());
 
         DisplayText("Else Body:");
@@ -57,6 +58,20 @@ namespace AST
         {
             DisplayNode(child);
         }
+
+        PopIndentation();
+    }
+
+    void ASTDisplayer::VisitNode(LoopNode& node)
+    {
+        DisplayText("Loop:");
+        PushIndentation();
+
+        DisplayText("Condition:");
+        DisplayNode(node.GetConditionExpression());
+
+        DisplayText("Loop Body:");
+        DisplayNode(node.GetLoopBody());
 
         PopIndentation();
     }

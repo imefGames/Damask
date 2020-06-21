@@ -5,6 +5,7 @@
 #include <ast/branchnode.h>
 #include <ast/functioncallnode.h>
 #include <ast/instructionsequencenode.h>
+#include <ast/loopnode.h>
 #include <ast/operatornode.h>
 #include <ast/rawvaluenode.h>
 #include <ast/variabledeclarationnode.h>
@@ -62,6 +63,11 @@ namespace AST
 
 					case EToken::KeywordDo:
 					case EToken::KeywordFor:
+					{
+						// TODO: error
+						break;
+					}
+
 					case EToken::KeywordWhile:
 					{
 						node = BuildLoop(lexer, executionContext);
@@ -338,7 +344,14 @@ namespace AST
 
 		Node* BuildLoop(Lexer& lexer, ExecutionContext& executionContext)
 		{
-			return nullptr;
+			// TODO: Handle errors
+
+			LoopNode* loopNode{ new LoopNode{} };
+			Expect(lexer, executionContext, EToken::SeparatorLBracketRound);
+			loopNode->SetConditionExpression(BuildExpression(lexer, executionContext));
+			Expect(lexer, executionContext, EToken::SeparatorRBracketRound);
+			loopNode->SetLoopBody(BuildInstruction(lexer, executionContext));
+			return loopNode;
 		}
 
 		Node* BuildScopedInstructionSequence(Lexer& lexer, ExecutionContext& executionContext)

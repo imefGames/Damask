@@ -2,8 +2,8 @@
 
 add_executable (Damask "Damask.cpp"
                        "lexer.h" "lexer.cpp"
-                       "ast.h" "ast.cpp"
-                       "executioncontext.h" "executioncontext.cpp"
+                       "astbuilder.h" "astbuilder.cpp"
+                       "compilationcontext.h" "compilationcontext.cpp"
                        "ast/node.h" "ast/node.cpp"
                        "ast/branchnode.h" "ast/branchnode.cpp"
                        "ast/functioncallnode.h" "ast/functioncallnode.cpp"

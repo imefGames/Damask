@@ -1,6 +1,6 @@
-#include <ast.h>
+#include <astbuilder.h>
 
-#include <executioncontext.h>
+#include <compilationcontext.h>
 #include <lexer.h>
 #include <ast/branchnode.h>
 #include <ast/functioncallnode.h>
@@ -16,15 +16,15 @@ namespace AST
 {
 	namespace Internal
 	{
-		Node* BuildAssignation(Lexer& lexer, ExecutionContext& executionContext, const Token& assignee);
-		Node* BuildBranch(Lexer& lexer, ExecutionContext& executionContext);
-		Node* BuildDeclaration(Lexer& lexer, ExecutionContext& executionContext, const Token& typeToken);
-		Node* BuildExpression(Lexer& lexer, ExecutionContext& executionContext);
-		Node* BuildFunctionCall(Lexer& lexer, ExecutionContext& executionContext, const Token& calledFunction);
-		Node* BuildLoop(Lexer& lexer, ExecutionContext& executionContext);
-		Node* BuildScopedInstructionSequence(Lexer& lexer, ExecutionContext& executionContext);
+		Node* BuildAssignation(Lexer& lexer, CompilationContext& compilationContext, const Token& assignee);
+		Node* BuildBranch(Lexer& lexer, CompilationContext& compilationContext);
+		Node* BuildDeclaration(Lexer& lexer, CompilationContext& compilationContext, const Token& typeToken);
+		Node* BuildExpression(Lexer& lexer, CompilationContext& compilationContext);
+		Node* BuildFunctionCall(Lexer& lexer, CompilationContext& compilationContext, const Token& calledFunction);
+		Node* BuildLoop(Lexer& lexer, CompilationContext& compilationContext);
+		Node* BuildScopedInstructionSequence(Lexer& lexer, CompilationContext& compilationContext);
 
-		void Expect(Lexer& lexer, ExecutionContext& executionContext, EToken expectedToken)
+		void Expect(Lexer& lexer, CompilationContext& compilationContext, EToken expectedToken)
 		{
 			Token nextToken{ lexer.ReadNextToken() };
 			if (nextToken.TokenType != expectedToken)
@@ -33,7 +33,7 @@ namespace AST
 			}
 		}
 
-		static Node* BuildInstruction(Lexer& lexer, ExecutionContext& executionContext)
+		static Node* BuildInstruction(Lexer& lexer, CompilationContext& compilationContext)
 		{
 			Node* node{ nullptr };
 			if (lexer.HasUnreadText())
@@ -43,7 +43,7 @@ namespace AST
 				{
 					case EToken::SeparatorLBracketCurly:
 					{
-						node = BuildScopedInstructionSequence(lexer, executionContext);
+						node = BuildScopedInstructionSequence(lexer, compilationContext);
 						break;
 					}
 
@@ -51,13 +51,13 @@ namespace AST
 					case EToken::TypeNameS32:
 					case EToken::TypeNameU32:
 					{
-						node = BuildDeclaration(lexer, executionContext, nextToken);
+						node = BuildDeclaration(lexer, compilationContext, nextToken);
 						break;
 					}
 
 					case EToken::KeywordIf:
 					{
-						node = BuildBranch(lexer, executionContext);
+						node = BuildBranch(lexer, compilationContext);
 						break;
 					}
 
@@ -70,7 +70,7 @@ namespace AST
 
 					case EToken::KeywordWhile:
 					{
-						node = BuildLoop(lexer, executionContext);
+						node = BuildLoop(lexer, compilationContext);
 						break;
 					}
 
@@ -83,15 +83,15 @@ namespace AST
 						{
 							case EToken::SeparatorLBracketRound:
 							{
-								node = BuildFunctionCall(lexer, executionContext, identifierToken);
-								Expect(lexer, executionContext, EToken::SeparatorInstructionEnd);
+								node = BuildFunctionCall(lexer, compilationContext, identifierToken);
+								Expect(lexer, compilationContext, EToken::SeparatorInstructionEnd);
 								break;
 							}
 
 							case EToken::OperatorAssign:
 							{
-								node = BuildAssignation(lexer, executionContext, identifierToken);
-								Expect(lexer, executionContext, EToken::SeparatorInstructionEnd);
+								node = BuildAssignation(lexer, compilationContext, identifierToken);
+								Expect(lexer, compilationContext, EToken::SeparatorInstructionEnd);
 								break;
 							}
 
@@ -108,33 +108,33 @@ namespace AST
 			return node;
 		}
 
-		Node* BuildAssignation(Lexer& lexer, ExecutionContext& executionContext, const Token& assignee)
+		Node* BuildAssignation(Lexer& lexer, CompilationContext& compilationContext, const Token& assignee)
 		{
 			OperatorNode* operatorNode{ new OperatorNode{} };
 			operatorNode->SetOperatorType(EToken::OperatorAssign);
 			operatorNode->SetLHSNode(new RawValueNode{ assignee.TokenText });
-			operatorNode->SetRHSNode(BuildExpression(lexer, executionContext));
+			operatorNode->SetRHSNode(BuildExpression(lexer, compilationContext));
 			return operatorNode;
 		}
 
-		Node* BuildBranch(Lexer& lexer, ExecutionContext& executionContext)
+		Node* BuildBranch(Lexer& lexer, CompilationContext& compilationContext)
 		{
 			// TODO: Handle errors
 
 			BranchNode* branchNode{ new BranchNode{} };
-			Expect(lexer, executionContext, EToken::SeparatorLBracketRound);
-			branchNode->SetConditionExpression(BuildExpression(lexer, executionContext));
-			Expect(lexer, executionContext, EToken::SeparatorRBracketRound);
-			branchNode->SetIfBody(BuildInstruction(lexer, executionContext));
+			Expect(lexer, compilationContext, EToken::SeparatorLBracketRound);
+			branchNode->SetConditionExpression(BuildExpression(lexer, compilationContext));
+			Expect(lexer, compilationContext, EToken::SeparatorRBracketRound);
+			branchNode->SetIfBody(BuildInstruction(lexer, compilationContext));
 			if (lexer.PeekNextToken().TokenType == EToken::KeywordElse)
 			{
 				lexer.ReadNextToken();
-				branchNode->SetElseBody(BuildInstruction(lexer, executionContext));
+				branchNode->SetElseBody(BuildInstruction(lexer, compilationContext));
 			}
 			return branchNode;
 		}
 
-		Node* BuildDeclaration(Lexer& lexer, ExecutionContext& executionContext, const Token& typeToken)
+		Node* BuildDeclaration(Lexer& lexer, CompilationContext& compilationContext, const Token& typeToken)
 		{
 			Node* declarationToken{ nullptr };
 			Token indentifierToken = lexer.ReadNextToken();
@@ -147,7 +147,7 @@ namespace AST
 					{
 						// TODO: Function Decl
 						//Read Arguments
-						//Expect(lexer, executionContext, EToken::SeparatorRBracketRound)
+						//Expect(lexer, compilationContext, EToken::SeparatorRBracketRound)
 						//BuildScopedInstructionSequence
 						break;
 					}
@@ -159,8 +159,8 @@ namespace AST
 						VariableDeclarationNode* variableDeclaration{ new VariableDeclarationNode{} };
 						variableDeclaration->SetVariableName(indentifierToken.TokenText);
 						variableDeclaration->SetVariableType(indentifierToken.TokenType);
-						variableDeclaration->SetInitExpression(BuildExpression(lexer, executionContext));
-						Expect(lexer, executionContext, EToken::SeparatorInstructionEnd);
+						variableDeclaration->SetInitExpression(BuildExpression(lexer, compilationContext));
+						Expect(lexer, compilationContext, EToken::SeparatorInstructionEnd);
 						declarationToken = variableDeclaration;
 						break;
 					}
@@ -207,7 +207,7 @@ namespace AST
 			return topNode;
 		}
 
-		Node* BuildExpression(Lexer& lexer, ExecutionContext& executionContext)
+		Node* BuildExpression(Lexer& lexer, CompilationContext& compilationContext)
 		{
 			std::stack<EToken> operatorstack;
 			std::stack<Node*> tokenStack;
@@ -263,7 +263,7 @@ namespace AST
 						if (followingToken.TokenType == EToken::SeparatorLBracketRound)
 						{
 							lexer.ReadNextToken();
-							tokenStack.push(BuildFunctionCall(lexer, executionContext, currentToken));
+							tokenStack.push(BuildFunctionCall(lexer, compilationContext, currentToken));
 						}
 						else
 						{
@@ -315,7 +315,7 @@ namespace AST
 			return BuildExpressionTreeRecursive(tokenStack);
 		}
 
-		Node* BuildFunctionCall(Lexer& lexer, ExecutionContext& executionContext, const Token& calledFunction)
+		Node* BuildFunctionCall(Lexer& lexer, CompilationContext& compilationContext, const Token& calledFunction)
 		{
 			FunctionCallNode* functionCallNode{ new FunctionCallNode{} };
 			functionCallNode->SetFunctionName(calledFunction.TokenText);
@@ -331,7 +331,7 @@ namespace AST
 				}
 				else
 				{
-					functionCallNode->AddArgument(BuildExpression(lexer, executionContext));
+					functionCallNode->AddArgument(BuildExpression(lexer, compilationContext));
 					Token followingToken{ lexer.PeekNextToken() };
 					if (followingToken.TokenType != EToken::SeparatorRBracketRound && followingToken.TokenType != EToken::SeparatorComma)
 					{
@@ -342,24 +342,24 @@ namespace AST
 			return functionCallNode;
 		}
 
-		Node* BuildLoop(Lexer& lexer, ExecutionContext& executionContext)
+		Node* BuildLoop(Lexer& lexer, CompilationContext& compilationContext)
 		{
 			// TODO: Handle errors
 
 			LoopNode* loopNode{ new LoopNode{} };
-			Expect(lexer, executionContext, EToken::SeparatorLBracketRound);
-			loopNode->SetConditionExpression(BuildExpression(lexer, executionContext));
-			Expect(lexer, executionContext, EToken::SeparatorRBracketRound);
-			loopNode->SetLoopBody(BuildInstruction(lexer, executionContext));
+			Expect(lexer, compilationContext, EToken::SeparatorLBracketRound);
+			loopNode->SetConditionExpression(BuildExpression(lexer, compilationContext));
+			Expect(lexer, compilationContext, EToken::SeparatorRBracketRound);
+			loopNode->SetLoopBody(BuildInstruction(lexer, compilationContext));
 			return loopNode;
 		}
 
-		Node* BuildScopedInstructionSequence(Lexer& lexer, ExecutionContext& executionContext)
+		Node* BuildScopedInstructionSequence(Lexer& lexer, CompilationContext& compilationContext)
 		{
 			InstructionSequenceNode* instructionSequence{ new InstructionSequenceNode{} };
 			while (lexer.PeekNextToken().TokenType != EToken::SeparatorRBracketCurly)
 			{
-				if (Node* builtNode = Internal::BuildInstruction(lexer, executionContext))
+				if (Node* builtNode = Internal::BuildInstruction(lexer, compilationContext))
 				{
 					instructionSequence->AddInstruction(builtNode);
 				}
@@ -374,13 +374,13 @@ namespace AST
 		}
 	}
 
-	Node* BuildAST(Lexer& lexer, ExecutionContext& executionContext)
+	Node* BuildAST(Lexer& lexer, CompilationContext& compilationContext)
 	{
 		InstructionSequenceNode* instructionSequence{ new InstructionSequenceNode{} };
 
 		while (lexer.HasUnreadText()) // TODO: break if an error occurs
 		{
-			if (Node* builtNode = Internal::BuildInstruction(lexer, executionContext))
+			if (Node* builtNode = Internal::BuildInstruction(lexer, compilationContext))
 			{
 				instructionSequence->AddInstruction(builtNode);
 			}

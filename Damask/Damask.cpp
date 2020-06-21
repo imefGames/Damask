@@ -1,5 +1,5 @@
-﻿#include <ast.h>
-#include <executioncontext.h>
+﻿#include <astbuilder.h>
+#include <compilationcontext.h>
 #include <lexer.h>
 #include <ast/node.h>
 #include <ast/visitor/astdisplayer.h>
@@ -24,8 +24,8 @@ int main()
 {
 	Lexer lexer{ K_TEST_PROGRAM };
 
-	ExecutionContext ec;
-	AST::Node* n{ AST::BuildAST(lexer, ec) };
+	CompilationContext context;
+	AST::Node* n{ AST::BuildAST(lexer, context) };
 
 	AST::ASTDisplayer displayer;
 	n->Accept(displayer);

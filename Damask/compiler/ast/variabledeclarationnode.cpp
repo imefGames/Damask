@@ -1,7 +1,7 @@
-#include <ast/variabledeclarationnode.h>
+#include <compiler/ast/variabledeclarationnode.h>
 
-#include <lexer.h>
-#include <ast/visitor/astvisitor.h>
+#include <compiler/lexer.h>
+#include <compiler/ast/visitor/astvisitor.h>
 
 namespace AST
 {

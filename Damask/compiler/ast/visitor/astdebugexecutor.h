@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ast/visitor/astvisitor.h>
+#include <compiler/ast/visitor/astvisitor.h>
 #include <map>
 #include <string>
 

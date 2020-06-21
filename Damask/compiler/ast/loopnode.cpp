@@ -1,6 +1,6 @@
-#include <ast/loopnode.h>
+#include <compiler/ast/loopnode.h>
 
-#include <ast/visitor/astvisitor.h>
+#include <compiler/ast/visitor/astvisitor.h>
 
 namespace AST
 {

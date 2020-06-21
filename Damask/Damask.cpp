@@ -1,9 +1,9 @@
-﻿#include <astbuilder.h>
-#include <compilationcontext.h>
-#include <lexer.h>
-#include <ast/node.h>
-#include <ast/visitor/astdisplayer.h>
-#include <ast/visitor/astdebugexecutor.h>
+﻿#include <compiler/astbuilder.h>
+#include <compiler/compilationcontext.h>
+#include <compiler/lexer.h>
+#include <compiler/ast/node.h>
+#include <compiler/ast/visitor/astdisplayer.h>
+#include <compiler/ast/visitor/astdebugexecutor.h>
 
 #include <iostream>
 

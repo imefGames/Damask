@@ -1,6 +1,6 @@
-#include <ast/branchnode.h>
+#include <compiler/ast/branchnode.h>
 
-#include <ast/visitor/astvisitor.h>
+#include <compiler/ast/visitor/astvisitor.h>
 
 namespace AST
 {

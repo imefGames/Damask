@@ -1,4 +1,4 @@
-#include <ast/node.h>
+#include <compiler/ast/node.h>
 
 namespace AST
 {

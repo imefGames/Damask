@@ -1,12 +1,12 @@
-#include <ast/visitor/astdisplayer.h>
+#include <compiler/ast/visitor/astdisplayer.h>
 
-#include <ast/branchnode.h>
-#include <ast/functioncallnode.h>
-#include <ast/instructionsequencenode.h>
-#include <ast/loopnode.h>
-#include <ast/operatornode.h>
-#include <ast/rawvaluenode.h>
-#include <ast/variabledeclarationnode.h>
+#include <compiler/ast/branchnode.h>
+#include <compiler/ast/functioncallnode.h>
+#include <compiler/ast/instructionsequencenode.h>
+#include <compiler/ast/loopnode.h>
+#include <compiler/ast/operatornode.h>
+#include <compiler/ast/rawvaluenode.h>
+#include <compiler/ast/variabledeclarationnode.h>
 
 #include <iostream>
 

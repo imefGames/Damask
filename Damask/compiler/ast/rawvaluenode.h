@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ast/node.h>
+#include <compiler/ast/node.h>
 
 #include <string_view>
 

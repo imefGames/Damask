@@ -20,6 +20,26 @@ namespace AST
 
     void ASTDebugExecutor::VisitNode(BranchNode& node)
     {
+        m_ReturnValue = 0;
+        if (Node* condition = node.GetConditionExpression())
+        {
+            condition->Accept(*this);
+        }
+
+        if (m_ReturnValue)
+        {
+            if (Node* ifBody = node.GetIfBody())
+            {
+                ifBody->Accept(*this);
+            }
+        }
+        else
+        {
+            if (Node* elseBody = node.GetElseBody())
+            {
+                elseBody->Accept(*this);
+            }
+        }
     }
 
     void ASTDebugExecutor::VisitNode(FunctionCallNode& node)

@@ -356,6 +356,7 @@ namespace AST
 					break;
 				}
 			}
+			lexer.ReadNextToken();
 			return instructionSequence;
 		}
 	}

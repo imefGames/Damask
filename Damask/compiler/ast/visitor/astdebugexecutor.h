@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 
+class CompilationContext;
+
 namespace AST
 {
     class Node;
@@ -11,10 +13,11 @@ namespace AST
     class ASTDebugExecutor : public ASTVisitor
     {
     public:
-        ASTDebugExecutor();
+        ASTDebugExecutor(CompilationContext& compilationContext);
 
         void VisitNode(BranchNode& node) override;
         void VisitNode(FunctionCallNode& node) override;
+        void VisitNode(FunctionDeclarationNode& node) override;
         void VisitNode(InstructionSequenceNode& node) override;
         void VisitNode(LoopNode& node) override;
         void VisitNode(OperatorNode& node) override;
@@ -23,6 +26,7 @@ namespace AST
 
     private:
         std::map<std::string, int> m_Variables;
+        CompilationContext& m_CompilationContext;
         int m_ReturnValue;
     };
 }

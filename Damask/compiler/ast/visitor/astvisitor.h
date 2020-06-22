@@ -4,6 +4,7 @@ namespace AST
 {
     class BranchNode;
     class FunctionCallNode;
+    class FunctionDeclarationNode;
     class InstructionSequenceNode;
     class LoopNode;
     class OperatorNode;
@@ -15,6 +16,7 @@ namespace AST
     public:
         virtual void VisitNode(BranchNode& node) {}
         virtual void VisitNode(FunctionCallNode& node) {}
+        virtual void VisitNode(FunctionDeclarationNode& node) {}
         virtual void VisitNode(InstructionSequenceNode& node) {}
         virtual void VisitNode(LoopNode& node) {}
         virtual void VisitNode(OperatorNode& node) {}

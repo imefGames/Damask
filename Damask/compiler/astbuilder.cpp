@@ -4,6 +4,7 @@
 #include <compiler/lexer.h>
 #include <compiler/ast/branchnode.h>
 #include <compiler/ast/functioncallnode.h>
+#include <compiler/ast/functiondeclarationnode.h>
 #include <compiler/ast/instructionsequencenode.h>
 #include <compiler/ast/loopnode.h>
 #include <compiler/ast/operatornode.h>
@@ -16,6 +17,7 @@ namespace AST
 {
 	namespace Internal
 	{
+		VariableDeclarationNode* BuildArgumentDeclaration(Lexer& lexer, CompilationContext& compilationContext, const Token& typeToken);
 		Node* BuildAssignation(Lexer& lexer, CompilationContext& compilationContext, const Token& assignee);
 		Node* BuildBranch(Lexer& lexer, CompilationContext& compilationContext);
 		Node* BuildDeclaration(Lexer& lexer, CompilationContext& compilationContext, const Token& typeToken);
@@ -108,6 +110,15 @@ namespace AST
 			return node;
 		}
 
+		VariableDeclarationNode* BuildArgumentDeclaration(Lexer& lexer, CompilationContext& compilationContext, const Token& typeToken)
+		{
+			Token indentifierToken = lexer.ReadNextToken();
+			VariableDeclarationNode* variableDeclaration{ new VariableDeclarationNode{} };
+			variableDeclaration->SetVariableName(indentifierToken.TokenText);
+			variableDeclaration->SetVariableType(typeToken.TokenType);
+			return variableDeclaration;
+		}
+
 		Node* BuildAssignation(Lexer& lexer, CompilationContext& compilationContext, const Token& assignee)
 		{
 			OperatorNode* operatorNode{ new OperatorNode{} };
@@ -145,10 +156,39 @@ namespace AST
 				{
 					case EToken::SeparatorLBracketRound:
 					{
-						// TODO: Function Decl
-						//Read Arguments
-						//Expect(lexer, compilationContext, EToken::SeparatorRBracketRound)
-						//BuildScopedInstructionSequence
+						lexer.ReadNextToken();
+
+						FunctionDeclarationNode* functionDeclarationNode{ new FunctionDeclarationNode{} };
+						functionDeclarationNode->SetFunctionName(indentifierToken.TokenText);
+						functionDeclarationNode->SetReturnType(typeToken.TokenType);
+
+						bool lookingForArguments{ true };
+						while (lookingForArguments)
+						{
+							Token currentToken{ lexer.ReadNextToken() };
+							if (currentToken.TokenType == EToken::SeparatorRBracketRound)
+							{
+								lookingForArguments = false;
+							}
+							else
+							{
+								functionDeclarationNode->AddArgument(BuildArgumentDeclaration(lexer, compilationContext, currentToken));
+								Token followingToken{ lexer.ReadNextToken() };
+								
+								if (followingToken.TokenType == EToken::SeparatorRBracketRound)
+								{
+									lookingForArguments = false;
+								}
+								else if (followingToken.TokenType != EToken::SeparatorComma)
+								{
+									//TODO: error
+								}
+							}
+						}
+
+						Expect(lexer, compilationContext, EToken::SeparatorLBracketCurly);
+						functionDeclarationNode->SetFunctionBody(BuildScopedInstructionSequence(lexer, compilationContext));
+						compilationContext.RegisterFunction(std::string{ indentifierToken.TokenText }, functionDeclarationNode);
 						break;
 					}
 

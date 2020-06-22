@@ -1,7 +1,9 @@
 #include <compiler/ast/visitor/astdebugexecutor.h>
 
+#include <compiler/compilationcontext.h>
 #include <compiler/ast/branchnode.h>
 #include <compiler/ast/functioncallnode.h>
+#include <compiler/ast/functiondeclarationnode.h>
 #include <compiler/ast/instructionsequencenode.h>
 #include <compiler/ast/loopnode.h>
 #include <compiler/ast/operatornode.h>
@@ -14,8 +16,9 @@
 
 namespace AST
 {
-    ASTDebugExecutor::ASTDebugExecutor()
-        : m_ReturnValue{ 0 }
+    ASTDebugExecutor::ASTDebugExecutor(CompilationContext& compilationContext)
+        : m_CompilationContext{ compilationContext }
+        , m_ReturnValue{ 0 }
     {
     }
 
@@ -58,6 +61,38 @@ namespace AST
             }
             std::cout << m_ReturnValue << '\n';
         }
+        else if (FunctionDeclarationNode* functionDeclaration = m_CompilationContext.FindFunction(std::string{ node.GetFunctionName() }))
+        {
+            ASTDebugExecutor functionExecutor{ m_CompilationContext };
+            //TODO: check the arguments match.
+
+            const auto& providedArguments{ node.GetChildrenNodes() };
+            const auto& expectedArguments{ functionDeclaration->GetArguments() };
+            if (providedArguments.size() == expectedArguments.size())
+            {
+                for (unsigned int i = 0; i < providedArguments.size(); ++i)
+                {
+                    providedArguments[i]->Accept(*this);
+                    functionExecutor.m_Variables[std::string{ expectedArguments[i]->GetVariableName() }] = m_ReturnValue;
+                }
+
+                if (Node* body = functionDeclaration->GetFunctionBody())
+                {
+                    body->Accept(functionExecutor);
+
+                    m_ReturnValue = functionExecutor.m_ReturnValue;
+                }
+            }
+            else
+            {
+                //TODO: error
+            }
+        }
+    }
+
+    void ASTDebugExecutor::VisitNode(FunctionDeclarationNode& node)
+    {
+        //TODO: Error! Should never be called.
     }
 
     void ASTDebugExecutor::VisitNode(InstructionSequenceNode& node)

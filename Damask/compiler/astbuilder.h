@@ -7,5 +7,5 @@ namespace AST
 {
 	class Node;
 
-	Node* BuildAST(Lexer& lexern, CompilationContext& compilationContext);
+	Node* BuildAST(Lexer& lexer, CompilationContext& compilationContext);
 }

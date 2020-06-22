@@ -15,6 +15,7 @@ namespace AST
 
         void VisitNode(BranchNode& node) override;
         void VisitNode(FunctionCallNode& node) override;
+        void VisitNode(FunctionDeclarationNode& node) override;
         void VisitNode(InstructionSequenceNode& node) override;
         void VisitNode(LoopNode& node) override;
         void VisitNode(OperatorNode& node) override;

@@ -2,6 +2,7 @@
 
 #include <compiler/ast/branchnode.h>
 #include <compiler/ast/functioncallnode.h>
+#include <compiler/ast/functiondeclarationnode.h>
 #include <compiler/ast/instructionsequencenode.h>
 #include <compiler/ast/loopnode.h>
 #include <compiler/ast/operatornode.h>
@@ -45,6 +46,26 @@ namespace AST
         {
             DisplayNode(child);
         }
+
+        PopIndentation();
+    }
+    
+    void ASTDisplayer::VisitNode(FunctionDeclarationNode& node)
+    {
+        DisplayText("Function Declaration:");
+        PushIndentation();
+
+        DisplayText(node.GetFunctionName());
+        //TODO: display return type
+
+        DisplayText("Arguments:");
+        for (Node* child : node.GetArguments())
+        {
+            DisplayNode(child);
+        }
+
+        DisplayText("Function Body:");
+        DisplayNode(node.GetFunctionBody());
 
         PopIndentation();
     }

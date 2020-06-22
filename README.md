@@ -5,7 +5,6 @@ The core of this project was mostly made over the course of a week-end.
 
 Here's a list of issues I wish to address now that Damask can run some rudimentary instructions:
 * There are many features programming languages have that need to be implemented here.
-* Functions declarations are not taken into account.
 * Operator precedence is not taken into account.
 * The ***ASTExecutor*** visitor only handles S32 integers.
 * The Lexer and the AST Builder need to report errors.

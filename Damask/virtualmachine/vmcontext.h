@@ -42,7 +42,10 @@ namespace VirtualMachine
         inline bool IsFlagRaised(Flag flag) const { return (m_Flags & static_cast<char>(flag)); }
         inline void SetFlags(char flags) { m_Flags = flags; }
 
+<<<<<<< HEAD
         inline void TerminateProgram() { m_IsProgramRunning = false; }
+=======
+>>>>>>> 253dd2a05924d10e87edf5528792d432095eaf44
         inline size_t GetCurrentInstruction() const { return m_CurrentInstruction; }
         inline void JumpToInstruction(size_t nextInstruction) { m_CurrentInstruction = nextInstruction; }
 
@@ -61,6 +64,9 @@ namespace VirtualMachine
         size_t m_RawMemorySize;
         size_t m_CurrentInstruction;
         char m_Flags;
+<<<<<<< HEAD
         bool m_IsProgramRunning;
+=======
+>>>>>>> 253dd2a05924d10e87edf5528792d432095eaf44
     };
 }

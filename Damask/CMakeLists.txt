@@ -18,6 +18,6 @@ add_executable (Damask "Damask.cpp"
                        "compiler/ast/visitor/astdebugexecutor.h" "compiler/ast/visitor/astdebugexecutor.cpp"
                        "virtualmachine/instructions.h" "virtualmachine/instructions.cpp"
                        "virtualmachine/vmcontext.h" "virtualmachine/vmcontext.cpp"
-                       )
+                       "virtualmachine/vmbinarycompiler.h" "virtualmachine/vmbinarycompiler.cpp")
 
 set_property(TARGET Damask PROPERTY CXX_STANDARD 17)

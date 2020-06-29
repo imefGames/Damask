@@ -8,6 +8,7 @@ namespace VirtualMachine
     VMContext::VMContext()
         : m_CurrentInstruction{ 0 }
         , m_Flags{ 0 }
+        , m_IsProgramRunning{ false }
     {
         std::fill(std::begin(m_GeneralPurposeRegisters), std::end(m_GeneralPurposeRegisters), 0);
 
@@ -41,22 +42,32 @@ namespace VirtualMachine
         m_Instructions[static_cast<size_t>(Instruction::Mod)] = Instructions::Modulo;
         m_Instructions[static_cast<size_t>(Instruction::Shl)] = Instructions::ShiftLeft;
         m_Instructions[static_cast<size_t>(Instruction::Shr)] = Instructions::ShiftRight;
+    }
 
-
-        /*
-        TODO:
-            Organise the virtual memory segments
-                - text: executable code
-                - data: initialized static variables
-                - bss: uninitialized static variables
-                - heap: for heap allocation
-                - stack: for stack allocation (at the end on the virtual memory)
-        */
+    void VMContext::LoadBinaryCode(const std::vector<char>& binaryCode)
+    {
+        if (binaryCode.size() < m_RawMemorySize) //TODO: reserve some space for the stack & heap
+        {
+            std::memcpy(m_RawMemory, binaryCode.data(), binaryCode.size());
+        }
+        else
+        {
+            //TODO: error
+        }
     }
 
     void VMContext::RunInstructions()
     {
+        //TODO: setup stack & heap
+
+        long long& basePointerRegister{ m_GeneralPurposeRegisters[static_cast<size_t>(MemoryLocation::RegisterBP) - static_cast<size_t>(MemoryLocation::RegisterFirst)] };
+        long long& stackPointerRegister{ m_GeneralPurposeRegisters[static_cast<size_t>(MemoryLocation::RegisterSP) - static_cast<size_t>(MemoryLocation::RegisterFirst)] };
+        basePointerRegister = static_cast<long long>(m_RawMemorySize - 1);
+        stackPointerRegister = basePointerRegister;
+
+        m_CurrentInstruction = 0;
         m_IsProgramRunning = true;
+
         while (m_IsProgramRunning)
         {
             Instruction currentInstruction{ ReadFromInstructionBuffer<Instruction>() };

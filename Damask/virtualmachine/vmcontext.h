@@ -1,6 +1,7 @@
 #pragma once
 
 #include <virtualmachine/instructions.h>
+#include <vector>
 
 namespace VirtualMachine
 {
@@ -8,6 +9,7 @@ namespace VirtualMachine
     {
     public:
         VMContext();
+        void LoadBinaryCode(const std::vector<char>& binaryCode);
         void RunInstructions();
 
         template <class T>
@@ -57,7 +59,7 @@ namespace VirtualMachine
 
         long long m_GeneralPurposeRegisters[K_GENERAL_PURPOSE_REGISTER_COUNT];
         InstructionCallback m_Instructions[static_cast<size_t>(Instruction::Count)];
-        char* m_RawMemory;
+        char* m_RawMemory; //TODO: organize memory in pages ?
         size_t m_RawMemorySize;
         size_t m_CurrentInstruction;
         char m_Flags;

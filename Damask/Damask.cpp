@@ -3,8 +3,8 @@
 #include <compiler/lexer.h>
 #include <compiler/ast/functiondeclarationnode.h>
 #include <compiler/ast/node.h>
-#include <compiler/ast/visitor/astdisplayer.h>
-#include <compiler/ast/visitor/astdebugexecutor.h>
+#include <virtualmachine/vmbinarycompiler.h>
+#include <virtualmachine/vmcontext.h>
 
 #include <iostream>
 
@@ -40,13 +40,17 @@ int main()
 
 	if (AST::FunctionDeclarationNode* mainFunction = context.FindFunction("main"))
 	{
-		AST::ASTDisplayer displayer{};
-		rootNode->Accept(displayer);
-		mainFunction->Accept(displayer);
+		VirtualMachine::VMBinaryCompiler binaryCompiler{};
+		rootNode->Accept(binaryCompiler);
 
-		AST::ASTDebugExecutor executor(context);
-		rootNode->Accept(executor);
-		mainFunction->GetFunctionBody()->Accept(executor);
+		//TODO: accept all functions & handle function locating in binary
+
+		mainFunction->Accept(binaryCompiler);
+		std::vector<char> binaryCode{ binaryCompiler.BuildBinaryCode() };
+
+		VirtualMachine::VMContext vmContext{};
+		vmContext.LoadBinaryCode(binaryCode);
+		vmContext.RunInstructions();
 	}
 	else
 	{

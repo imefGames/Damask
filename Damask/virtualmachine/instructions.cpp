@@ -21,10 +21,7 @@ namespace VirtualMachine
 
         void Return(VMContext& context)
         {
-<<<<<<< HEAD
             //TODO: if this is the return for main, terminate.
-=======
->>>>>>> 253dd2a05924d10e87edf5528792d432095eaf44
             size_t returnInstruction{ static_cast<size_t>(context.PopFromStack()) };
             context.JumpToInstruction(returnInstruction);
         }

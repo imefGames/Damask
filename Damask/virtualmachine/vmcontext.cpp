@@ -56,12 +56,8 @@ namespace VirtualMachine
 
     void VMContext::RunInstructions()
     {
-<<<<<<< HEAD
         m_IsProgramRunning = true;
         while (m_IsProgramRunning)
-=======
-        while (false) //TODO Have end condition
->>>>>>> 253dd2a05924d10e87edf5528792d432095eaf44
         {
             Instruction currentInstruction{ ReadFromInstructionBuffer<Instruction>() };
             if (InstructionCallback instructionCallback = GetInstruction(currentInstruction))

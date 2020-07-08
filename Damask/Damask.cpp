@@ -22,12 +22,10 @@ static const char* K_TEST_PROGRAM
 "void main()\n"
 "{\n"
 "    s32 a = 1;\n"
-"    while (a)\n"
+"    while (a = ReadS32())\n"
 "    {\n"
-"        s32 a = ReadS32();\n"
 "        TestFunction(a);"
 "    }\n"
-"    Print(a);\n"
 "}\n"
 };
 

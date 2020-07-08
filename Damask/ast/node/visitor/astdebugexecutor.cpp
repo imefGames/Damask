@@ -174,6 +174,30 @@ namespace AST
                 m_ReturnValue = lhsValue % rhsValue;
                 break;
             }
+
+            case EToken::OperatorAssign:
+            {
+                if (RawValueNode* destinationNode = dynamic_cast<RawValueNode*>(node.GetLHSNode()))
+                {
+                    std::string variableName{ destinationNode->GetValue() };
+                    auto foundIt{ m_Variables.find(variableName) };
+                    if (foundIt != m_Variables.end())
+                    {
+                        foundIt->second = rhsValue;
+                    }
+                    else
+                    {
+                        //TODO: error
+                    }
+                }
+                else
+                {
+                    //TODO: error
+                }
+
+                m_ReturnValue = rhsValue;
+                break;
+            }
         }
     }
 

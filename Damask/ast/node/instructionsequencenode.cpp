@@ -1,6 +1,6 @@
-#include <compiler/ast/instructionsequencenode.h>
+#include <ast/node/instructionsequencenode.h>
 
-#include <compiler/ast/visitor/astvisitor.h>
+#include <ast/node/visitor/astvisitor.h>
 
 namespace AST
 {

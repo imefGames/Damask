@@ -1,6 +1,6 @@
 #pragma once
 
-#include <compiler/ast/node.h>
+#include <ast/node/node.h>
 
 enum class EToken;
 

@@ -1,7 +1,7 @@
-#include <compiler/ast/operatornode.h>
+#include <ast/node/operatornode.h>
 
-#include <compiler/lexer.h>
-#include <compiler/ast/visitor/astvisitor.h>
+#include <ast/lexer.h>
+#include <ast/node/visitor/astvisitor.h>
 
 namespace AST
 {

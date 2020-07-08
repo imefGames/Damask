@@ -1,4 +1,4 @@
-#include <compiler/lexer.h>
+#include <ast/lexer.h>
 
 #include <algorithm>
 #include <cctype>

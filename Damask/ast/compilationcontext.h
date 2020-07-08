@@ -16,6 +16,7 @@ public:
 
     void ReportError(const std::string& errorText);
 
+    const std::map<std::string, AST::FunctionDeclarationNode*>& GetAllFunctions() const { return m_Functions; };
     AST::FunctionDeclarationNode* FindFunction(const std::string& functionName) const;
     void RegisterFunction(const std::string& functionName, AST::FunctionDeclarationNode* functionRootNode);
 

@@ -1,6 +1,6 @@
-#include <compiler/ast/rawvaluenode.h>
+#include <ast/node/rawvaluenode.h>
 
-#include <compiler/ast/visitor/astvisitor.h>
+#include <ast/node/visitor/astvisitor.h>
 
 namespace AST
 {

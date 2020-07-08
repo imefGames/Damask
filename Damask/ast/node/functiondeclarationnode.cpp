@@ -1,8 +1,8 @@
-#include <compiler/ast/functiondeclarationnode.h>
+#include <ast/node/functiondeclarationnode.h>
 
-#include <compiler/lexer.h>
-#include <compiler/ast/variabledeclarationnode.h>
-#include <compiler/ast/visitor/astvisitor.h>
+#include <ast/lexer.h>
+#include <ast/node/variabledeclarationnode.h>
+#include <ast/node/visitor/astvisitor.h>
 
 namespace AST
 {

@@ -1,15 +1,15 @@
-#include <compiler/astbuilder.h>
+#include <ast/astbuilder.h>
 
-#include <compiler/compilationcontext.h>
-#include <compiler/lexer.h>
-#include <compiler/ast/branchnode.h>
-#include <compiler/ast/functioncallnode.h>
-#include <compiler/ast/functiondeclarationnode.h>
-#include <compiler/ast/instructionsequencenode.h>
-#include <compiler/ast/loopnode.h>
-#include <compiler/ast/operatornode.h>
-#include <compiler/ast/rawvaluenode.h>
-#include <compiler/ast/variabledeclarationnode.h>
+#include <ast/compilationcontext.h>
+#include <ast/lexer.h>
+#include <ast/node/branchnode.h>
+#include <ast/node/functioncallnode.h>
+#include <ast/node/functiondeclarationnode.h>
+#include <ast/node/instructionsequencenode.h>
+#include <ast/node/loopnode.h>
+#include <ast/node/operatornode.h>
+#include <ast/node/rawvaluenode.h>
+#include <ast/node/variabledeclarationnode.h>
 
 #include <stack>
 

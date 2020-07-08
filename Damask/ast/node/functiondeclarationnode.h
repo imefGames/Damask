@@ -1,29 +1,36 @@
 #pragma once
 
-#include <compiler/ast/node.h>
+#include <ast/node/node.h>
 #include <string_view>
 
 enum class EToken;
 
 namespace AST
 {
-    class FunctionCallNode : public Node
+    class VariableDeclarationNode;
+
+    class FunctionDeclarationNode : public Node
     {
     public:
-        FunctionCallNode();
+        FunctionDeclarationNode();
 
+        inline const std::vector<VariableDeclarationNode*>& GetArguments() const { return m_Arguments; }
         inline std::string_view GetFunctionName() const { return m_FunctionName; }
         inline EToken GetReturnType() const { return m_ReturnType; }
+        inline Node* GetFunctionBody() const { return m_FunctionBody; }
 
         inline void SetFunctionName(std::string_view functionName) { m_FunctionName = functionName; }
         inline void SetReturnType(EToken returnType) { m_ReturnType = returnType; }
+        void SetFunctionBody(Node* functionBody);
 
-        void AddArgument(Node* argumentNode);
+        void AddArgument(VariableDeclarationNode* argumentNode);
 
         void Accept(ASTVisitor& visitor) override;
 
     private:
+        std::vector<VariableDeclarationNode*> m_Arguments;
         std::string_view m_FunctionName;
         EToken m_ReturnType;
+        Node* m_FunctionBody;
     };
 }

@@ -1,9 +1,9 @@
-﻿#include <compiler/astbuilder.h>
-#include <compiler/compilationcontext.h>
-#include <compiler/lexer.h>
-#include <compiler/ast/functiondeclarationnode.h>
-#include <compiler/ast/node.h>
-#include <virtualmachine/vmbinarycompiler.h>
+﻿#include <ast/astbuilder.h>
+#include <ast/compilationcontext.h>
+#include <ast/lexer.h>
+#include <ast/node/functiondeclarationnode.h>
+#include <ast/node/node.h>
+#include <ast/node/visitor/astdebugexecutor.h>
 #include <virtualmachine/vmcontext.h>
 
 #include <iostream>
@@ -40,17 +40,13 @@ int main()
 
 	if (AST::FunctionDeclarationNode* mainFunction = context.FindFunction("main"))
 	{
-		VirtualMachine::VMBinaryCompiler binaryCompiler{};
-		rootNode->Accept(binaryCompiler);
+		AST::ASTDebugExecutor executor{ context };
+		rootNode->Accept(executor);
+		mainFunction->GetFunctionBody()->Accept(executor);
 
-		//TODO: accept all functions & handle function locating in binary
-
-		mainFunction->Accept(binaryCompiler);
-		std::vector<char> binaryCode{ binaryCompiler.BuildBinaryCode() };
-
-		VirtualMachine::VMContext vmContext{};
-		vmContext.LoadBinaryCode(binaryCode);
-		vmContext.RunInstructions();
+		//VirtualMachine::VMContext vmContext{};
+		//vmContext.LoadBinaryCode(binaryCode);
+		//vmContext.RunInstructions();
 	}
 	else
 	{
